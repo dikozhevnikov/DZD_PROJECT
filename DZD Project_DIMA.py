@@ -142,7 +142,7 @@ clm.print_rule(1)
 clm.print_rule(2)
 
 
-#4ft Miner - dependency of the churn on the geography (nefunguje a je tu nekonečný proces)
+#4ft Miner - dependency of the churn on the geography (nefunguje a je tu nekonečný proces )
 
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.8, 'Base':100},
