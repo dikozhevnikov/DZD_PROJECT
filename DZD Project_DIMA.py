@@ -13,7 +13,7 @@ from sklearn.model_selection import train_test_split
 from sklearn.linear_model import LogisticRegressionCV
 from sklearn.tree import DecisionTreeClassifier
 from sklearn.model_selection import GridSearchCV
-from sklearn.metrics import plot_confusion_matrix
+#from sklearn.metrics import plot_confusion_matrix
 from sklearn.metrics import confusion_matrix
 from sklearn.metrics import accuracy_score
 from sklearn.metrics import roc_curve
@@ -34,7 +34,7 @@ print(churn)
 df = churn.join(location)
 
 #create clasters for zip_codes
-df["Zip_cluster"]= df["Zip Code"].map(lambda x: int(x)//50*50)
+df["Zip_cluster"]= df["Zip Code"].map(lambda x: int(x)//100)
 
 #Integer Datatype reassessment
 df['IsFemale'] = (df['gender'] == 'Female').astype(int)
@@ -59,6 +59,16 @@ df["tenure_exp"] = df["tenure"].map(ten_exp)
 df[["tenure", "tenure_exp"]]
 df["tenure_exp"].value_counts()
 
+# Create new column Services
+def services(x):
+  res = ""
+  if x.PhoneService == "Yes": res += "Phone "
+  if x.InternetService != "No": res += "Internet "
+  if x.StreamingTV != "No" or x.StreamingMovies != "No": res += "TV "
+  return res
+
+df["Service"] = df.apply(services, axis=1)
+df.Service.value_counts()
 
 
 #Creation Bins - Quartile
@@ -158,3 +168,50 @@ clm = cleverminer(df=df,proc='4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
+
+# CFMiner- Payment Method
+his= df.PaymentMethod.hist()
+# 'Bank transfer (automatic)', 'Credit card (automatic)', 'Electronic check', 'Mailed check'
+
+# Condition  : PhoneService(Yes ) & InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
+
+#Histogram [15, 17, 15, 148]
+clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
+               quantifiers= {'RelMax':0.75, 'Base':100},
+               cond ={
+                    'attributes':[
+
+                        {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
+                        {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
+                    ], 'minlen':1, 'maxlen':4, 'type':'con'}
+               )
+
+
+#clm.print_summary()
+clm.print_rulelist()
+print_rule(4)
+print(clm.result)
+
+
+# CFMiner Payment Method
+# InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
+clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
+               quantifiers= {'RelMax':0.75, 'Base':100},
+               cond ={
+                    'attributes':[
+                        {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
+                        {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
+                    ], 'minlen':1, 'maxlen':3, 'type':'con'}
+               )
+
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+print(clm.result)
