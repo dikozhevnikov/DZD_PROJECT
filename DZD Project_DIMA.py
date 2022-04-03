@@ -65,6 +65,7 @@ def services(x):
   if x.PhoneService == "Yes": res += "Phone "
   if x.InternetService != "No": res += "Internet "
   if x.StreamingTV != "No" or x.StreamingMovies != "No": res += "TV "
+  if res == "Phone Internet TV ": res = "Internet TV Phone"
   return res
 
 df["Service"] = df.apply(services, axis=1)
@@ -213,4 +214,24 @@ clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
 clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(2)
+print(clm.result)
+
+#CFMiner
+#Service
+clm = cleverminer(df=df.copy(),target='Service',proc='CFMiner',
+               quantifiers= {'Base':100, 'S_Any_Up':3},
+               cond ={
+                    'attributes':[
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
+                        {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
+                    ], 'minlen':3, 'maxlen':4, 'type':'con'}
+               )
+
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+clm.print_rule(8)
 print(clm.result)
