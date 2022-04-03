@@ -72,7 +72,7 @@ df.Service.value_counts()
 
 
 #Creation Bins - Quartile
-df['quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
+df['Quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
 print(df.quartile_MonCharg.unique())
 
 
