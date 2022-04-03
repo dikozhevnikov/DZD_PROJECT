@@ -114,7 +114,8 @@ clm = cleverminer(df=df,proc='4ftMiner',
                         {'name': 'Contract', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'PaymentMethod', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'quartile_MonCharg', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
-                        {'name': 'PaperlessBilling', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                        {'name': 'PaperlessBilling', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
                     ], 'minlen':1, 'maxlen':4, 'type':'con'},
                succ ={
                     'attributes':[
@@ -137,7 +138,7 @@ clm = cleverminer(df=df,proc='4ftMiner',
                         {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 3}
                     ], 'minlen':1, 'maxlen':5, 'type':'con'},
                succ ={
                     'attributes':[
@@ -151,22 +152,6 @@ clm.print_rule(1)
 
 
 
-#4ft Miner - dependency of the churn on the locations
-
-clm = cleverminer(df=df,proc='4ftMiner',
-               quantifiers= {'conf':0.8, 'Base':100},
-               ante ={
-                    'attributes':[
-                        {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 3}
-                    ], 'minlen':1, 'maxlen':1, 'type':'con'},
-               succ ={
-                    'attributes':[
-                        {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
-               )
-
-clm.print_summary()
-clm.print_rulelist()
 
 # CFMiner- Payment Method
 his= df.PaymentMethod.hist()
