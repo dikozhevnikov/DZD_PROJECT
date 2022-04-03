@@ -73,7 +73,7 @@ df.Service.value_counts()
 
 
 #Creation Bins - Quartile
-df['quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
+df['Quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
 print(df.quartile_MonCharg.unique())
 
 
@@ -128,7 +128,7 @@ clm.print_rulelist()
 clm.print_rule(1)
 clm.print_rule(2)
 
-#4ft Miner - dependency of the churn on the demografics
+#4ft Miner - dependency of the churn on the demografic characteristics
 
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.9, 'Base':1000},
@@ -149,6 +149,8 @@ clm = cleverminer(df=df,proc='4ftMiner',
 clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(1)
+clm.print_rule(2)
+clm.print_rule(3)
 
 
 
@@ -168,6 +170,10 @@ clm = cleverminer(df=df,proc='4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
+clm.print_rule(1)
+clm.print_rule(2)
+clm.print_rule(3)
+clm.print_rule(4)
 
 # CFMiner- Payment Method
 his= df.PaymentMethod.hist()
