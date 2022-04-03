@@ -73,14 +73,14 @@ df.Service.value_counts()
 
 
 #Creation Bins - Quartile
-df['Quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
+df['quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
 print(df.quartile_MonCharg.unique())
 
 
 #4ft Miner - dependency of the churn on the type of services used
 
 clm = cleverminer(df=df,proc='4ftMiner',
-               quantifiers= {'conf':0.9, 'Base':1400},
+               quantifiers= {'conf':0.7, 'Base':100},
                ante ={
                     'attributes':[
                         {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
@@ -92,35 +92,34 @@ clm = cleverminer(df=df,proc='4ftMiner',
                         {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                    ], 'minlen':1, 'maxlen':4, 'type':'con'},
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'},
                succ ={
                     'attributes':[
                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+                    ], 'minlen':2, 'maxlen':4, 'type':'con'}
                )
 
 clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(1)
-clm.print_rule(64)
 
 
 
-#4ft Miner - dependency of the churn on the contract conditions
+#4ft Miner - dependency of the churn on the type of services used
 
 clm = cleverminer(df=df,proc='4ftMiner',
-               quantifiers= {'conf':0.9, 'Base':1000},
+               quantifiers= {'conf':0.7, 'Base':100},
                ante ={
                     'attributes':[
                         {'name': 'Contract', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'PaymentMethod', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'quartile_MonCharg', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
                         {'name': 'PaperlessBilling', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-                    ], 'minlen':1, 'maxlen':4, 'type':'con'},
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'},
                succ ={
                     'attributes':[
                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+                    ], 'minlen':2, 'maxlen':4, 'type':'con'}
                )
 
 clm.print_summary()
@@ -128,10 +127,10 @@ clm.print_rulelist()
 clm.print_rule(1)
 clm.print_rule(2)
 
-#4ft Miner - dependency of the churn on the demografic characteristics
+#4ft Miner - dependency of the churn on the demografics
 
 clm = cleverminer(df=df,proc='4ftMiner',
-               quantifiers= {'conf':0.9, 'Base':1000},
+               quantifiers= {'conf':0.8, 'Base':100},
                ante ={
                     'attributes':[
                         {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
@@ -139,22 +138,20 @@ clm = cleverminer(df=df,proc='4ftMiner',
                         {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                         {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
-                    ], 'minlen':1, 'maxlen':5, 'type':'con'},
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'},
                succ ={
                     'attributes':[
                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+                    ], 'minlen':2, 'maxlen':4, 'type':'con'}
                )
 
 clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(1)
 clm.print_rule(2)
-clm.print_rule(3)
 
 
-
-#4ft Miner - dependency of the churn on the locations
+#4ft Miner - dependency of the churn on the geography (nefunguje a je tu nekonečný proces)
 
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.8, 'Base':100},
@@ -170,10 +167,6 @@ clm = cleverminer(df=df,proc='4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
-clm.print_rule(1)
-clm.print_rule(2)
-clm.print_rule(3)
-clm.print_rule(4)
 
 # CFMiner- Payment Method
 his= df.PaymentMethod.hist()
