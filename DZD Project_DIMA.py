@@ -197,6 +197,7 @@ print(clm.result)
 
 # CFMiner Payment Method
 # InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
+# [15, 17, 15, 148]
 clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
                quantifiers= {'RelMax':0.75, 'Base':100},
                cond ={
@@ -211,5 +212,5 @@ clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
 
 clm.print_summary()
 clm.print_rulelist()
-clm.print_rule(1)
+clm.print_rule(2)
 print(clm.result)
