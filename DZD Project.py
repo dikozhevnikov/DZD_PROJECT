@@ -214,3 +214,6 @@ clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(1)
 print(clm.result)
+
+
+#TEST1
