@@ -222,38 +222,64 @@ print(df.quartile_MonCharg.unique())
 # Mezi kterými regiony v Kalifornii jsou významné rozdíly ohledně kombinací demografických atributů zákazníka (GENDER, SENIORCITIZEN, PARTNER, DEPENDENTS) a koupenými služby (Services)?
 # Region(?) x Region(?) [Zakaznik = Sluzby]
 # TODO: alter quantifiers, lengths
+# clm = cleverminer(df=df, proc='SD4ftMiner',
+#                   quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 0.3},
+#                   ante={
+#                       'attributes': [
+#                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                       ], 'minlen': 1, 'maxlen': 4, 'type': 'con'},
+#                   succ={
+#                       'attributes': [
+#                           {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'MultipleLines', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'OnlineSecurity', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'DeviceProtection', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'TechSupport', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                       ], 'minlen': 1, 'maxlen': 5, 'type': 'con'},
+#                   frst={
+#                       'attributes': [
+#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
+#                   scnd={
+#                       'attributes': [
+#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'}
+#                   )
+#
+# clm.print_summary()
+# clm.print_rulelist()
+
+# Je pro zákazníky za nějakých okolností relativní četnost odchodu (churn 0) větší než 0.25 v porovnání mužů a žen?
 clm = cleverminer(df=df, proc='SD4ftMiner',
-                  quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 0.3},
+                  quantifiers={'Base1': 400, 'Base2': 400, 'Frstconf': 0.25},
                   ante={
                       'attributes': [
                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                      ], 'minlen': 1, 'maxlen': 4, 'type': 'con'},
+                          {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
+                      ], 'minlen': 0, 'maxlen': 5, 'type': 'con'},
                   succ={
                       'attributes': [
-                          {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'MultipleLines', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'OnlineSecurity', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'DeviceProtection', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'TechSupport', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                      ], 'minlen': 1, 'maxlen': 5, 'type': 'con'},
+                          {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                      ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
                   frst={
                       'attributes': [
-                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                          {'name': 'gender', 'type': 'one', 'value': 'Male'},
                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
                   scnd={
                       'attributes': [
-                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                          {'name': 'gender', 'type': 'one', 'value': 'Female'},
                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'}
                   )
 
 clm.print_summary()
 clm.print_rulelist()
-clm.print_rule(1)
-# Je pro zákazníky za nějakých okolností relativní četnost odchodu (churn 0) větší než 0.25 v porovnání mužů a žen?
