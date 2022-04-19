@@ -223,7 +223,7 @@ print(df.quartile_MonCharg.unique())
 # Region(?) x Region(?) [Zakaznik = Sluzby]
 # TODO: alter quantifiers, lengths
 clm = cleverminer(df=df, proc='SD4ftMiner',
-                  quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 2.0},
+                  quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 0.3},
                   ante={
                       'attributes': [
                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
@@ -242,18 +242,18 @@ clm = cleverminer(df=df, proc='SD4ftMiner',
                           {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                      ], 'minlen': 1, 'maxlen': 4, 'type': 'con'},
+                      ], 'minlen': 1, 'maxlen': 5, 'type': 'con'},
                   frst={
                       'attributes': [
-                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 2}
+                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
                   scnd={
                       'attributes': [
-                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 2}
+                          {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'}
                   )
 
 clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(1)
-print(clm.result)
+# Je pro zákazníky za nějakých okolností relativní četnost odchodu (churn 0) větší než 0.25 v porovnání mužů a žen?
