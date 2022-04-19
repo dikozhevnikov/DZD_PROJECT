@@ -22,9 +22,7 @@ import pandas as pd
 from cleverminer import cleverminer
 
 # Import Datasets
-# url1 = 'https://raw.githubusercontent.com/dikozhevnikov/DZD_PROJECT/master/Telco_customer_churn_location-2.csv'
 location = pd.read_csv('Telco_customer_churn_location-2.csv')
-# url2 = 'https://raw.githubusercontent.com/dikozhevnikov/DZD_PROJECT/master/Customer_Churn.csv'
 churn = pd.read_csv('Customer_Churn.csv')
 
 print(location)
@@ -47,7 +45,6 @@ df = df.astype({"Leave": bool})
 cols = pd.DataFrame(df.columns)
 cols["c"] = cols[0].map(lambda x: df[x].nunique())
 cols = cols.sort_values("c", ascending=False)
-cols
 
 
 # Create tenure Bins
@@ -219,9 +216,8 @@ print(df.quartile_MonCharg.unique())
 
 
 # SD4ft Miner
-# Mezi kterými regiony v Kalifornii jsou významné rozdíly ohledně kombinací demografických atributů zákazníka (GENDER, SENIORCITIZEN, PARTNER, DEPENDENTS) a koupenými služby (Services)?
-# Region(?) x Region(?) [Zakaznik = Sluzby]
-# TODO: alter quantifiers, lengths
+# Region(?) x Region(?) [Customer = Services]
+
 # clm = cleverminer(df=df, proc='SD4ftMiner',
 #                   quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 0.3},
 #                   ante={
@@ -258,7 +254,7 @@ print(df.quartile_MonCharg.unique())
 
 # Je pro zákazníky za nějakých okolností relativní četnost odchodu (churn 0) větší než 0.25 v porovnání mužů a žen?
 clm = cleverminer(df=df, proc='SD4ftMiner',
-                  quantifiers={'Base1': 400, 'Base2': 400, 'Frstconf': 0.25},
+                  quantifiers={'FrstBase': 50, 'ScndBase': 50, 'Ratioconf': 1},
                   ante={
                       'attributes': [
                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
@@ -269,7 +265,7 @@ clm = cleverminer(df=df, proc='SD4ftMiner',
                       ], 'minlen': 0, 'maxlen': 5, 'type': 'con'},
                   succ={
                       'attributes': [
-                          {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                          {'name': 'Leave', 'type': 'one', 'value': 'True'}
                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
                   frst={
                       'attributes': [
@@ -283,3 +279,4 @@ clm = cleverminer(df=df, proc='SD4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
+clm.print_rule(10)
