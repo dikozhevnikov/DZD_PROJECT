@@ -91,8 +91,7 @@ clm.print_rule(1)
 clm.print_rule(64)
 
 
-
-#4ft Miner - dependency of the churn on the contract conditions
+# 4ft Miner - dependency of the churn on the contract conditions
 
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.9, 'Base':1000},
@@ -114,8 +113,7 @@ clm.print_rulelist()
 clm.print_rule(1)
 clm.print_rule(2)
 
-#4ft Miner - dependency of the churn on the demografics
-
+# 4ft Miner - dependency of the churn on the demographics
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.9, 'Base':1000},
                ante ={
@@ -137,9 +135,7 @@ clm.print_rulelist()
 clm.print_rule(1)
 
 
-
-#4ft Miner - dependency of the churn on the locations
-
+# 4ft Miner - dependency of the churn on the locations
 clm = cleverminer(df=df,proc='4ftMiner',
                quantifiers= {'conf':0.8, 'Base':100},
                ante ={
@@ -154,6 +150,7 @@ clm = cleverminer(df=df,proc='4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
+
 
 # CFMiner- Payment Method
 his= df.PaymentMethod.hist()
@@ -233,6 +230,7 @@ clm.print_summary()
 clm.print_rulelist()
 clm.print_rule(37)
 
+# Commented because it runs for a few minutes
 # Region(?) x Region(?) [Customer = Services]
 # clm = cleverminer(df=df, proc='SD4ftMiner',
 #                   quantifiers={'Base1': 50, 'Base2': 50, 'Deltaconf': 0.1},
