@@ -1,23 +1,7 @@
 # Import packages
-from urllib import request
-from urllib.request import urlopen
-
 import pandas as pd
-# import matplotlib.pyplot as plt
-# import numpy as np
-# import seaborn as sns
-# import sys
-#
-# from sklearn.tree import plot_tree
-# from sklearn.model_selection import train_test_split
-# from sklearn.linear_model import LogisticRegressionCV
-# from sklearn.tree import DecisionTreeClassifier
-# from sklearn.model_selection import GridSearchCV
-# #from sklearn.metrics import plot_confusion_matrix
-# from sklearn.metrics import confusion_matrix
-# from sklearn.metrics import accuracy_score
-# from sklearn.metrics import roc_curve
-# from sklearn.metrics import roc_auc_score
+import matplotlib.pyplot as plt
+import numpy as np
 
 from cleverminer import cleverminer
 
