@@ -51,7 +51,8 @@ cols = cols.sort_values("c", ascending=False)
 def ten_exp(x):
     lowers = [-1, 3, 6, 12, 24, 60, 120]
     for i, lower in enumerate(lowers):
-        if x <= lower: return i  # f"{lowers[i-1]+1} - {lower}"
+        if x <= lower:
+            return i  # f"{lowers[i-1]+1} - {lower}"
 
 
 df["tenure_exp"] = df["tenure"].map(ten_exp)
@@ -62,9 +63,12 @@ df["tenure_exp"].value_counts()
 # Create new column Services
 def services(x):
     res = ""
-    if x.PhoneService == "Yes": res += "Phone "
-    if x.InternetService != "No": res += "Internet "
-    if x.StreamingTV != "No" or x.StreamingMovies != "No": res += "TV "
+    if x.PhoneService == "Yes":
+        res += "Phone "
+    if x.InternetService != "No":
+        res += "Internet "
+    if x.StreamingTV != "No" or x.StreamingMovies != "No":
+        res += "TV "
     return res
 
 
@@ -75,192 +79,156 @@ df.Service.value_counts()
 df['quartile_MonCharg'] = pd.qcut(df['MonthlyCharges'], q=4)
 print(df.quartile_MonCharg.unique())
 
-# #4ft Miner - dependency of the churn on the type of services used
-#
-# clm = cleverminer(df=df,proc='4ftMiner',
-#                quantifiers= {'conf':0.9, 'Base':1400},
-#                ante ={
-#                     'attributes':[
-#                         {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'MultipleLines', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'OnlineSecurity', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'DeviceProtection', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'TechSupport', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                     ], 'minlen':1, 'maxlen':4, 'type':'con'},
-#                succ ={
-#                     'attributes':[
-#                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                     ], 'minlen':1, 'maxlen':1, 'type':'con'}
-#                )
-#
-# clm.print_summary()
-# clm.print_rulelist()
-# clm.print_rule(1)
-# clm.print_rule(64)
-#
-#
-#
-# #4ft Miner - dependency of the churn on the contract conditions
-#
-# clm = cleverminer(df=df,proc='4ftMiner',
-#                quantifiers= {'conf':0.9, 'Base':1000},
-#                ante ={
-#                     'attributes':[
-#                         {'name': 'Contract', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'PaymentMethod', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'quartile_MonCharg', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'PaperlessBilling', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                     ], 'minlen':1, 'maxlen':4, 'type':'con'},
-#                succ ={
-#                     'attributes':[
-#                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                     ], 'minlen':1, 'maxlen':1, 'type':'con'}
-#                )
-#
-# clm.print_summary()
-# clm.print_rulelist()
-# clm.print_rule(1)
-# clm.print_rule(2)
-#
-# #4ft Miner - dependency of the churn on the demografics
-#
-# clm = cleverminer(df=df,proc='4ftMiner',
-#                quantifiers= {'conf':0.9, 'Base':1000},
-#                ante ={
-#                     'attributes':[
-#                         {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
-#                     ], 'minlen':1, 'maxlen':5, 'type':'con'},
-#                succ ={
-#                     'attributes':[
-#                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                     ], 'minlen':1, 'maxlen':1, 'type':'con'}
-#                )
-#
-# clm.print_summary()
-# clm.print_rulelist()
-# clm.print_rule(1)
-#
-#
-#
-# #4ft Miner - dependency of the churn on the locations
-#
-# clm = cleverminer(df=df,proc='4ftMiner',
-#                quantifiers= {'conf':0.8, 'Base':100},
-#                ante ={
-#                     'attributes':[
-#                         {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 3}
-#                     ], 'minlen':1, 'maxlen':1, 'type':'con'},
-#                succ ={
-#                     'attributes':[
-#                         {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                     ], 'minlen':1, 'maxlen':1, 'type':'con'}
-#                )
-#
-# clm.print_summary()
-# clm.print_rulelist()
-#
-# # CFMiner- Payment Method
-# his= df.PaymentMethod.hist()
-# # 'Bank transfer (automatic)', 'Credit card (automatic)', 'Electronic check', 'Mailed check'
-#
-# # Condition  : PhoneService(Yes ) & InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
-#
-# #Histogram [15, 17, 15, 148]
-# clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
-#                quantifiers= {'RelMax':0.75, 'Base':100},
-#                cond ={
-#                     'attributes':[
-#
-#                         {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
-#                         {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
-#                     ], 'minlen':1, 'maxlen':4, 'type':'con'}
-#                )
-#
-#
-# #clm.print_summary()
-# clm.print_rulelist()
-# clm.print_rule(4)
-# print(clm.result)
-#
-#
-# # CFMiner Payment Method
-# # InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
-# clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
-#                quantifiers= {'RelMax':0.75, 'Base':100},
-#                cond ={
-#                     'attributes':[
-#                         {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                         {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
-#                         {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
-#                     ], 'minlen':1, 'maxlen':3, 'type':'con'}
-#                )
-#
-#
-# clm.print_summary()
-# clm.print_rulelist()
-# clm.print_rule(1)
-# print(clm.result)
+#4ft Miner - dependency of the churn on the type of services used
+
+clm = cleverminer(df=df,proc='4ftMiner',
+               quantifiers= {'conf':0.9, 'Base':1400},
+               ante ={
+                    'attributes':[
+                        {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'MultipleLines', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'OnlineSecurity', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'DeviceProtection', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'TechSupport', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                    ], 'minlen':1, 'maxlen':4, 'type':'con'},
+               succ ={
+                    'attributes':[
+                        {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+               )
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+clm.print_rule(64)
+
+
+
+#4ft Miner - dependency of the churn on the contract conditions
+
+clm = cleverminer(df=df,proc='4ftMiner',
+               quantifiers= {'conf':0.9, 'Base':1000},
+               ante ={
+                    'attributes':[
+                        {'name': 'Contract', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'PaymentMethod', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'quartile_MonCharg', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'PaperlessBilling', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                    ], 'minlen':1, 'maxlen':4, 'type':'con'},
+               succ ={
+                    'attributes':[
+                        {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+               )
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+clm.print_rule(2)
+
+#4ft Miner - dependency of the churn on the demografics
+
+clm = cleverminer(df=df,proc='4ftMiner',
+               quantifiers= {'conf':0.9, 'Base':1000},
+               ante ={
+                    'attributes':[
+                        {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
+                    ], 'minlen':1, 'maxlen':5, 'type':'con'},
+               succ ={
+                    'attributes':[
+                        {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+               )
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+
+
+
+#4ft Miner - dependency of the churn on the locations
+
+clm = cleverminer(df=df,proc='4ftMiner',
+               quantifiers= {'conf':0.8, 'Base':100},
+               ante ={
+                    'attributes':[
+                        {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 3}
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'},
+               succ ={
+                    'attributes':[
+                        {'name': 'Leave', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+                    ], 'minlen':1, 'maxlen':1, 'type':'con'}
+               )
+
+clm.print_summary()
+clm.print_rulelist()
+
+# CFMiner- Payment Method
+his= df.PaymentMethod.hist()
+# 'Bank transfer (automatic)', 'Credit card (automatic)', 'Electronic check', 'Mailed check'
+
+# Condition  : PhoneService(Yes ) & InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
+
+#Histogram [15, 17, 15, 148]
+clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
+               quantifiers= {'RelMax':0.75, 'Base':100},
+               cond ={
+                    'attributes':[
+
+                        {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
+                        {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
+                    ], 'minlen':1, 'maxlen':4, 'type':'con'}
+               )
+
+
+#clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(4)
+print(clm.result)
+
+
+# CFMiner Payment Method
+# InternetService(No ) & gender(Male ) & tenure_exp(1 2 )
+clm = cleverminer(df=df.copy(),target='PaymentMethod',proc='CFMiner',
+               quantifiers= {'RelMax':0.75, 'Base':100},
+               cond ={
+                    'attributes':[
+                        {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+                        {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 3},
+                        {'name': 'Zip_cluster', 'type': 'seq', 'minlen': 1, 'maxlen': 4}
+                    ], 'minlen':1, 'maxlen':3, 'type':'con'}
+               )
+
+
+clm.print_summary()
+clm.print_rulelist()
+clm.print_rule(1)
+print(clm.result)
 
 
 # SD4ft Miner
-# Region(?) x Region(?) [Customer = Services]
-
-# clm = cleverminer(df=df, proc='SD4ftMiner',
-#                   quantifiers={'Base1': 50, 'Base2': 50, 'Ratioconf': 0.3},
-#                   ante={
-#                       'attributes': [
-#                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                       ], 'minlen': 1, 'maxlen': 4, 'type': 'con'},
-#                   succ={
-#                       'attributes': [
-#                           {'name': 'PhoneService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'MultipleLines', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'InternetService', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'OnlineSecurity', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'DeviceProtection', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'TechSupport', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'StreamingTV', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'StreamingMovies', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                           {'name': 'OnlineBackup', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-#                       ], 'minlen': 1, 'maxlen': 5, 'type': 'con'},
-#                   frst={
-#                       'attributes': [
-#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
-#                   scnd={
-#                       'attributes': [
-#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
-#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'}
-#                   )
-#
-# clm.print_summary()
-# clm.print_rulelist()
-
 # Je pro zákazníky za nějakých okolností relativní četnost odchodu (churn 0) větší než 0.25 v porovnání mužů a žen?
+
 clm = cleverminer(df=df, proc='SD4ftMiner',
-                  quantifiers={'FrstBase': 50, 'ScndBase': 50, 'Ratioconf': 1},
+                  quantifiers={'FrstBase': 50, 'ScndBase': 50, 'Frstconf': 0.25},
                   ante={
                       'attributes': [
                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
-                          {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
                           {'name': 'tenure_exp', 'type': 'seq', 'minlen': 1, 'maxlen': 1},
                       ], 'minlen': 0, 'maxlen': 5, 'type': 'con'},
                   succ={
@@ -279,4 +247,33 @@ clm = cleverminer(df=df, proc='SD4ftMiner',
 
 clm.print_summary()
 clm.print_rulelist()
-clm.print_rule(10)
+clm.print_rule(37)
+
+# Region(?) x Region(?) [Customer = Services]
+# clm = cleverminer(df=df, proc='SD4ftMiner',
+#                   quantifiers={'Base1': 50, 'Base2': 50, 'Deltaconf': 0.1},
+#                   ante={
+#                       'attributes': [
+#                           {'name': 'Dependents', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'Partner', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'SeniorCitizen', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                           {'name': 'gender', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                       ], 'minlen': 1, 'maxlen': 4, 'type': 'con'},
+#                   succ={
+#                       'attributes': [
+#                           {'name': 'Service', 'type': 'subset', 'minlen': 1, 'maxlen': 1},
+#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
+#                   frst={
+#                       'attributes': [
+#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'},
+#                   scnd={
+#                       'attributes': [
+#                           {'name': 'Zip_cluster', 'type': 'subset', 'minlen': 1, 'maxlen': 1}
+#                       ], 'minlen': 1, 'maxlen': 1, 'type': 'con'}
+#                   )
+#
+# clm.print_summary()
+# clm.print_rulelist()
+# RULEID BASE1 BASE2 RatioConf DeltaConf Rule
+# 5    59    56    1.439    +0.161  Dependents(No ) & SeniorCitizen(0 ) => Service(Phone Internet TV  ) | --- : Zip_cluster(922 ) x Zip_cluster(900 )
