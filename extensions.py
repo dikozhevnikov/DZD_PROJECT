@@ -1,3 +1,5 @@
+import pandas as pd
+
 def get_histogram(clm, rule_id):
   target = clm.kwargs["target"]
   df = clm.kwargs["df"]
